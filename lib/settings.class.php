@@ -23,6 +23,11 @@ class Settings {
     return $this->project;
   }
   
+  function push_post($post_id) {
+    $network = new Network($this->api_key);
+    $network->push_post($post_id);
+  }
+  
   // Install DB
   static function install() {
     global $wpdb;
