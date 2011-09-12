@@ -40,13 +40,17 @@ class Settings {
     	  element_type VARCHAR(32) NOT NULL DEFAULT 'post_post',
     	  element_id BIGINT NOT NULL,
     	  language_code VARCHAR(7) NOT NULL,
-    	  text TEXT NOT NULL,
+    	  post_content LONGTEXT NOT NULL,
+    	  post_title TEXT NOT NULL,
+    	  post_excerpt TEXT NOT NULL,
+    	  post_name VARCHAR(200) NOT NULL,
+    	  post_content_filtered TEXT NOT NULL,
     	  created_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     	  updated_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     	  last_pushed_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     	  last_pulled_at DATETIME,
     	  UNIQUE KEY element_type_id_lang (element_type,element_id,language_code)
-        );";
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
 
       require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
       dbDelta($sql);
