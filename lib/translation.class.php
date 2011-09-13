@@ -34,17 +34,39 @@ class Translation {
   
   function save() {
     global $wpdb;
-    $wpdb->insert($wpdb->prefix.'wtipress', array(
-      'post_content' => $this->post_content,
-      'post_title' => $this->post_title,
-      'post_excerpt' => $this->post_excerpt,
-      'post_name' => $this->post_name,
-      'post_content_filtered' => $this->post_content_filtered,
-      'created_at' => date ("Y-m-d H:i:s", time()),
-      'updated_at' => date ("Y-m-d H:i:s", time()),
-      'last_pushed_at' => date ("Y-m-d H:i:s", time())
+    if($wpdb->get_var($wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress WHERE element_type=%s AND element_id=%d AND language_code=%s", $this->post->post_type, $this->post->ID, $this->language))){
+      $wpdb->update($wpdb->prefix.'wtipress', array(
+        'post_content' => $this->post_content,
+        'post_title' => $this->post_title,
+        'post_excerpt' => $this->post_excerpt,
+        'post_name' => $this->post_name,
+        'post_content_filtered' => $this->post_content_filtered,
+        'updated_at' => date ("Y-m-d H:i:s", time()),
+        'last_pushed_at' => date ("Y-m-d H:i:s", time())
+      ),
+      array(
+        'element_id' => $this->post->ID,
+        'element_type' => $this->post->post_type,
+        'language_code' => $this->language
       )
     );
+    }
+    else {
+      $wpdb->insert($wpdb->prefix.'wtipress', array(
+        'element_id' => $this->post->ID,
+        'element_type' => $this->post->post_type,
+        'language_code' => $this->language,
+        'post_content' => $this->post_content,
+        'post_title' => $this->post_title,
+        'post_excerpt' => $this->post_excerpt,
+        'post_name' => $this->post_name,
+        'post_content_filtered' => $this->post_content_filtered,
+        'created_at' => date ("Y-m-d H:i:s", time()),
+        'updated_at' => date ("Y-m-d H:i:s", time()),
+        'last_pushed_at' => date ("Y-m-d H:i:s", time())
+        )
+      );
+    }
   }
 }
 ?>
