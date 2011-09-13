@@ -35,7 +35,6 @@ require WTIPRESS_PLUGIN_PATH . '/lib/settings.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/network.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/project.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
-require WTIPRESS_PLUGIN_PATH . '/lib/library/snoopy.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
 require WTIPRESS_PLUGIN_PATH . '/wtipress.class.php';
 
