@@ -49,6 +49,8 @@ class Settings {
     	  updated_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     	  last_pushed_at DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
     	  last_pulled_at DATETIME,
+    	  wti_file_id BIGINT NOT NULL,
+    	  wti_checksum VARCHAR(40),
     	  UNIQUE KEY element_type_id_lang (element_type,element_id,language_code)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
 

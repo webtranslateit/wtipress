@@ -12,8 +12,10 @@ class Translation {
   public $updated_at;
   public $last_pushed_at;
   public $last_pulled_at;
+  public $wti_file_id;
+  public $wti_checksum;
   
-  function __construct($post, $language, $post_content=NULL, $post_title=NULL, $post_excerpt=NULL, $post_name=NULL, $post_content_filtered=NULL, $created_at=NULL, $updated_at=NULL, $last_pushed_at=NULL, $last_pulled_at=NULL) {
+  function __construct($post, $language, $post_content=NULL, $post_title=NULL, $post_excerpt=NULL, $post_name=NULL, $post_content_filtered=NULL, $created_at=NULL, $updated_at=NULL, $last_pushed_at=NULL, $last_pulled_at=NULL, $wti_file_id=NULL, $wti_checksum=NULL) {
     $this->post = $post;
     $this->language = $language;
     $this->post_content = $post_content;
@@ -25,6 +27,8 @@ class Translation {
     $this->updated_at = $updated_at;
     $this->last_pushed_at = $last_pushed_at;
     $this->last_pulled_at = $last_pulled_at;
+    $this->wti_file_id = $wti_file_id;
+    $this->wti_checksum = $wti_checksum;
   }
   
   static function get_translation($post, $language) {
@@ -42,7 +46,8 @@ class Translation {
         'post_name' => $this->post_name,
         'post_content_filtered' => $this->post_content_filtered,
         'updated_at' => date ("Y-m-d H:i:s", time()),
-        'last_pushed_at' => date ("Y-m-d H:i:s", time())
+        'last_pushed_at' => date ("Y-m-d H:i:s", time()),
+        'wti_checksum' => $this->wti_checksum,
       ),
       array(
         'element_id' => $this->post->ID,
@@ -63,7 +68,9 @@ class Translation {
         'post_content_filtered' => $this->post_content_filtered,
         'created_at' => date ("Y-m-d H:i:s", time()),
         'updated_at' => date ("Y-m-d H:i:s", time()),
-        'last_pushed_at' => date ("Y-m-d H:i:s", time())
+        'last_pushed_at' => date ("Y-m-d H:i:s", time()),
+        'wti_file_id' => $this->wti_file_id,
+        'wti_checksum' => $this->wti_checksum,
         )
       );
     }
