@@ -40,9 +40,9 @@ class Translation {
       'post_excerpt' => $this->post_excerpt,
       'post_name' => $this->post_name,
       'post_content_filtered' => $this->post_content_filtered,
-      'created_at' => date ("Y-m-d H:i:s", $phptime),
-      'updated_at' => date ("Y-m-d H:i:s", $phptime),
-      'last_pushed_at' => date ("Y-m-d H:i:s", $phptime)
+      'created_at' => date ("Y-m-d H:i:s", time()),
+      'updated_at' => date ("Y-m-d H:i:s", time()),
+      'last_pushed_at' => date ("Y-m-d H:i:s", time())
       )
     );
   }
