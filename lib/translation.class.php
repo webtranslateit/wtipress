@@ -33,14 +33,20 @@ class Translation {
   
   static function get_translation($post, $language) {
     global $wpdb;
-    $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d AND language_code=%s", array($post->post_type, $post->ID, $language));
+    $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d AND language_id=%d", array($post->post_type, $post->ID, $language->id));
     $result = $wpdb->get_row($query);
     return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
   }
   
+  static function get_translations_for_post($post) {
+    global $wpdb;
+    $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d", array($post->post_type, $post->ID));
+    return $wpdb->get_results($query);
+  }
+  
   function save() {
     global $wpdb;
-    if($wpdb->get_var($wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d AND language_code=%s", $this->post->post_type, $this->post->ID, $this->language))){
+    if($wpdb->get_var($wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d AND language_id=%d", $this->post->post_type, $this->post->ID, $this->language->id))){
       $wpdb->update($wpdb->prefix.'wtipress_posts', array(
         'post_content' => $this->post_content,
         'post_title' => $this->post_title,
@@ -54,7 +60,7 @@ class Translation {
       array(
         'element_id' => $this->post->ID,
         'element_type' => $this->post->post_type,
-        'language_code' => $this->language
+        'language_id' => $this->language->id
       )
     );
     }
@@ -62,7 +68,7 @@ class Translation {
       $wpdb->insert($wpdb->prefix.'wtipress_posts', array(
         'element_id' => $this->post->ID,
         'element_type' => $this->post->post_type,
-        'language_code' => $this->language,
+        'language_id' => $this->language->id,
         'post_content' => $this->post_content,
         'post_title' => $this->post_title,
         'post_excerpt' => $this->post_excerpt,
