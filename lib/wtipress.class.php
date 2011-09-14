@@ -45,10 +45,14 @@ class WtiPress {
       $this->settings->refresh_settings();
     }
     elseif (isset($_POST['wti_post_id'])) {
-      $this->settings->push_post($_POST['wti_post_id']);
+      if ($_POST['action'] == 'push') {
+        $this->settings->push_post($_POST['wti_post_id']);
+      }
+      elseif ($_POST['action'] == 'pull') {
+        $this->settings->pull_post($_POST['wti_post_id']);
+      }
     }
   }
-  
 }
 
 ?>

@@ -37,6 +37,7 @@ require WTIPRESS_PLUGIN_PATH . '/lib/language.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/network.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlParser.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/wtipress.class.php';
 
 // Make sure we don't expose any info if called directly

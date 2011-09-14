@@ -54,7 +54,8 @@ class Translation {
         'post_name' => $this->post_name,
         'post_content_filtered' => $this->post_content_filtered,
         'updated_at' => date("Y-m-d H:i:s", time()),
-        'last_pushed_at' => date("Y-m-d H:i:s", time()),
+        'last_pushed_at' => $this->last_pushed_at,
+        'last_pulled_at' => $this->last_pulled_at,
         'wti_checksum' => $this->wti_checksum,
       ),
       array(
