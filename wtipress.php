@@ -27,7 +27,7 @@ Version: 0.0.1
        
 
 define('WTIPRESS_VERSION', '0.0.1');
-define('WTIPRESS_DB_VERSION', '0.0.1.9');
+define('WTIPRESS_DB_VERSION', '0.0.1.11');
 define('WTIPRESS_MIN_WORDPRESS_VERSION', '3.2.1'); // TODO: Test with earlier versions
 define('WTIPRESS_PLUGIN_PATH', dirname(__FILE__));
 define('WTIPRESS_PLUGIN_URL', rtrim(get_option('siteurl'),'/') . '/wp-content/' . basename(dirname(dirname(__FILE__))) . '/' . basename(dirname(__FILE__)) );
