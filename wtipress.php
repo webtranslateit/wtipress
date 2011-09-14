@@ -39,6 +39,7 @@ require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlParser.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/wtipress.class.php';
+require WTIPRESS_PLUGIN_PATH . '/inc/compatibility.php';
 
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {
