@@ -1,6 +1,6 @@
 <?php
 
-class Settings {
+class Setting {
   
   public $api_key;
   public $project;
@@ -62,7 +62,7 @@ class Settings {
   
   function update_db_ckeck() {
     if(get_site_option('wtipress_db_version') != WTIPRESS_DB_VERSION) {
-      Settings::install();
+      Setting::install();
       update_option('wtipress_db_version', WTIPRESS_DB_VERSION);
     }
   }
