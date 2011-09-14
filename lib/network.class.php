@@ -23,8 +23,8 @@ class Network {
     $post = get_post($post_id);
     // create pseudo language file
     $file_path = wp_upload_dir();
-    $file_path = $file_path['path'].$post->post_date.'-'.$post->post_name.'.yml';
-    $array = array('en' => array('post_title' => $post->post_title, 'post_excerpt' => $post->post_excerpt, 'post_content' => $post->post_content, 'post_name' => $post->post_name, 'post_content_filtered' => $post->post_content_filtered));
+    $file_path = $file_path['path'].$post->post_date.'-'.$post->post_name.'.wordpress';
+    $array = array('post_title' => $post->post_title, 'post_excerpt' => $post->post_excerpt, 'post_content' => $post->post_content, 'post_name' => $post->post_name, 'post_content_filtered' => $post->post_content_filtered);
     $dumper = new sfYamlDumper();
     $yaml = $dumper->dump($array);
     
