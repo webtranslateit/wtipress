@@ -4,16 +4,19 @@ class Setting {
   
   public $api_key;
   public $project_name;
+  public $project_id;
   
   function __construct() {
     $data = get_option('wtipress_settings');
     $this->api_key = $data['api_key'];
     $this->project_name = $data['project_name'];
+    $this->project_id = $data['project_id'];
   }
   
   function save() {
     $data['api_key'] = $this->api_key;
     $data['project_name'] = $this->project_name;
+    $data['project_id'] = $this->project_id;
     update_option('wtipress_settings', $data);
   }
   
@@ -21,6 +24,7 @@ class Setting {
     $network = new Network($this->api_key);
     $info = $network->get_project_info();
     $this->project_name = $info['project']['name'];
+    $this->project_id = $info['project']['id'];
     $this->save();
     // persist source language
     $l = new Language($info['project']['source_locale']['code'], $info['project']['source_locale']['name'], true);
@@ -29,7 +33,7 @@ class Setting {
     foreach($info['project']['target_locales'] as $target_locale) {
       // except source language
       if ($target_locale['code'] != $info['project']['source_locale']['code']) {
-        $l = new Language($target_locale['code'], $target_locale['name']);
+        $l = new Language(NULL, $target_locale['code'], $target_locale['name']);
         $l->save();
       }
     }
