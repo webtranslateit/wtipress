@@ -35,7 +35,12 @@ class Translation {
     global $wpdb;
     $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d AND language_id=%d", array($post->post_type, $post->ID, $language->id));
     $result = $wpdb->get_row($query);
-    return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
+    if ($result == NULL) {
+      return NULL;
+    }
+    else {
+      return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
+    }
   }
   
   static function get_translations_for_post($post) {
