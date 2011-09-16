@@ -38,6 +38,9 @@ class Translation {
     if ($result == NULL) {
       return NULL;
     }
+    elseif($result->post_content == "" || $result->post_title == "" || $result->post_excerpt == "" || $result->post_name == "" || $result->post_content_filtered == "") {
+      return NULL;
+    }
     else {
       return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
     }

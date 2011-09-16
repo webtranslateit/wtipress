@@ -3,6 +3,7 @@
 class Setting {
   
   public $api_key;
+  public $action_missing_translation;
   public $project_name;
   public $project_id;
   
@@ -11,12 +12,14 @@ class Setting {
     $this->api_key = $data['api_key'];
     $this->project_name = $data['project_name'];
     $this->project_id = $data['project_id'];
+    $this->action_missing_translation = $data['action_missing_translation'];
   }
   
   function save() {
     $data['api_key'] = $this->api_key;
     $data['project_name'] = $this->project_name;
     $data['project_id'] = $this->project_id;
+    $data['action_missing_translation'] = $this->action_missing_translation;
     update_option('wtipress_settings', $data);
   }
   
