@@ -40,6 +40,14 @@ class Language {
     return $result;
   }
   
+  static function get_all_as_array($source=false) {
+    $lang = Language::get_all();
+    function get_code($o){
+      return $o->code;
+    }
+    return array_map("get_code", $lang);
+  }
+  
   function save() {
     global $wpdb;
     if(Language::get_by_code($this->code)) {
