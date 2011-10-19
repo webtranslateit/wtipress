@@ -27,6 +27,9 @@ class WtiPress {
       add_filter('home_url', array($this, 'home_url'), 1, 4) ;
       add_filter('feed_link', array($this, 'feed_link'), 1);
       add_filter('author_link', array($this,'author_link'));
+      add_filter('year_link', array($this,'archives_link'));
+      add_filter('month_link', array($this,'archives_link'));
+      add_filter('day_link', array($this,'archives_link'));
     }
   }
   
@@ -118,7 +121,12 @@ class WtiPress {
     $url = $this->convert_url($url, $locale);
     return preg_replace('#^http://(.+)//(.+)$#','http://$1/$2', $url);
   }
-    
+  
+  function archives_link($url){
+    global $locale;
+    return $this->convert_url($url, $locale);
+  }
+  
   function convert_url($url, $locale) {
     $source_language = Language::get_source_language();
     if ($locale == $source_language[0]->code) {
