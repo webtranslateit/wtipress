@@ -25,7 +25,7 @@ class WtiPress {
       add_filter('category_link', array($this, 'category_permalink_filter'), 1, 2);
       add_filter('tag_link', array($this, 'tax_permalink_filter'), 1, 2);
       add_filter('home_url', array($this, 'home_url'), 1, 4) ;
-      add_filter('feed_link', array($this, 'feed_link'), 1, 4);
+      add_filter('feed_link', array($this, 'feed_link'), 1);
       add_filter('author_link', array($this,'author_link'));
     }
   }
