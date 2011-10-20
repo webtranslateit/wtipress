@@ -20,10 +20,16 @@
   
   <?php
   if(isset($wtipress->settings->api_key)) {
-    $project_params = $wtipress->network->project();
-    echo "In sync with project " . $project_params['project']['name'];
+    echo "In sync with project " . $wtipress->settings->get_project()->name;
     echo "<br />";
-    echo "Source Locale: " . $project_params['project']['source_locale']['name'];
+    echo "Source Locale: " . $wtipress->settings->get_project()->source_locale;
+    echo "<br />";
+    echo "Target Locales: ";
+    if (isset($wtipress->settings->get_project()->target_locales)) {
+      foreach($wtipress->settings->get_project()->target_locales as &$value) {
+        echo $value["name"]." ";
+      }
+    }
   }
   ?>
 </div>
