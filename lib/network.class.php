@@ -31,20 +31,21 @@ class Network {
     $handle = fopen($file_path, 'w') or die("can't open file");
     fwrite($handle, $yaml);
     fclose($handle);
+        
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.yml')); 
+    $response = curl_exec($ch);
+    unlink($file_path);
     
     // create entries for each language in wtipress table
     foreach($this->project()->target_locales as $target_locale) {
       $translation = new Translation($post, $target_locale['code']);
+      $translation->wti_file_id = $response;
       $translation->save();
     }
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files");
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.yml')); 
-    $response = curl_exec($ch);
-    
-    unlink($file_path);
   }
   
   function pull_post($post_id) {
