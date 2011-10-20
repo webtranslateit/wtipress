@@ -32,8 +32,10 @@ class Translation {
   }
   
   static function get_translation($post, $language) {
-    $result = $wpdb->get_var($wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress WHERE element_type=%s AND element_id=%d AND language_code=%s", $post->element_type, $post->element_id, $language));
-    return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at);
+    global $wpdb;
+    $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress WHERE element_type=%s AND element_id=%d AND language_code=%s", array($post->post_type, $post->ID, $language));
+    $result = $wpdb->get_row($query);
+    return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
   }
   
   function save() {
@@ -45,8 +47,8 @@ class Translation {
         'post_excerpt' => $this->post_excerpt,
         'post_name' => $this->post_name,
         'post_content_filtered' => $this->post_content_filtered,
-        'updated_at' => date ("Y-m-d H:i:s", time()),
-        'last_pushed_at' => date ("Y-m-d H:i:s", time()),
+        'updated_at' => date("Y-m-d H:i:s", time()),
+        'last_pushed_at' => date("Y-m-d H:i:s", time()),
         'wti_checksum' => $this->wti_checksum,
       ),
       array(
@@ -66,9 +68,9 @@ class Translation {
         'post_excerpt' => $this->post_excerpt,
         'post_name' => $this->post_name,
         'post_content_filtered' => $this->post_content_filtered,
-        'created_at' => date ("Y-m-d H:i:s", time()),
-        'updated_at' => date ("Y-m-d H:i:s", time()),
-        'last_pushed_at' => date ("Y-m-d H:i:s", time()),
+        'created_at' => date("Y-m-d H:i:s", time()),
+        'updated_at' => date("Y-m-d H:i:s", time()),
+        'last_pushed_at' => date("Y-m-d H:i:s", time()),
         'wti_file_id' => $this->wti_file_id,
         'wti_checksum' => $this->wti_checksum,
         )
