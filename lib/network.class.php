@@ -30,12 +30,12 @@ class Network {
     fclose($handle);
     
     $translation = Translation::get_translations_for_post($post);
-    if ($translation[0]->wti_file_id != NULL) {
+    if (!empty($translation)) {
       // get source locale
       $source_locale = Language::get_all(true);
       // already have translations in DB? Update.
       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $source_locale[0]->code);
+      curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation[0]->wti_file_id . "/locales/" . $source_locale[0]->code);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
       curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
@@ -82,9 +82,9 @@ class Network {
       $content = $parser->parse($response);
       $translation->post_content = $content['post_content'];
       $translation->post_title = $content['post_title'];
-      $translation->post_excerpt = $content['post_excerpt'];
+      $translation->post_excerpt = isset($content['post_excerpt']) ? $content['post_excerpt'] : "";
       $translation->post_name = $content['post_name'];
-      $translation->post_content_filtered = $content['post_content_filtered'];
+      $translation->post_content_filtered = isset($content['post_content_filtered']) ? $content['post_content_filtered'] : "";
       $translation->last_pulled_at = date("Y-m-d H:i:s", time());
       $translation->save();
     }
