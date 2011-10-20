@@ -9,14 +9,13 @@ class Network {
   }
   
   // call Project API
-  function project() {
+  function get_project_info() {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . ".json");
     $response = curl_exec($ch);
     $p = json_decode($response, true);
-    $project = new Project($p['project']['name'], $p['project']['source_locale']['code'], $p['project']['target_locales']);
-    return $project;
+    return $p;
   }
   
   function push_post($post_id) {
@@ -26,25 +25,25 @@ class Network {
     $file_path = $file_path['path']. "/". $post->post_date.'-'.$post->post_name.'.wordpress';
     $array = array('post_title' => $post->post_title, 'post_excerpt' => $post->post_excerpt, 'post_content' => $post->post_content, 'post_name' => $post->post_name, 'post_content_filtered' => $post->post_content_filtered);
     $dumper = new sfYamlDumper();
-    $yaml = $dumper->dump($array);
-    
     $handle = fopen($file_path, 'w') or die("can't open file");
-    fwrite($handle, $yaml);
+    fwrite($handle, $dumper->dump($array));
     fclose($handle);
     
-    $translation = Translation::get_translation($post, $this->project()->source_locale);
-    if ($translation->wti_file_id != NULL) {
+    $translation = Translation::get_translations_for_post($post);
+    if ($translation[0]->wti_file_id != NULL) {
+      // get source locale
+      $source_locale = Language::get_all(true);
       // already have translations in DB? Update.
       $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $this->project()->source_locale);
+      curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $source_locale[0]->code);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
       curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
       $response = curl_exec($ch);
       
       // update entries for each language in wtipress table
-      foreach($this->project()->target_locales as $target_locale) {
-        $translation = Translation::get_translation($post, $target_locale['code']);
+      foreach(Language::get_all() as $target_locale) {
+        $translation = Translation::get_translation($post, $target_locale);
         $translation->last_pushed_at = date("Y-m-d H:i:s", time());
         $translation->updated_at = date("Y-m-d H:i:s", time());
         $translation->save();
@@ -59,8 +58,8 @@ class Network {
       curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
       $response = curl_exec($ch);
       // create entries for each language in wtipress table
-      foreach($this->project()->target_locales as $target_locale) {
-        $translation = new Translation($post, $target_locale['code']);
+      foreach(Language::get_all() as $target_locale) {
+        $translation = new Translation($post, $target_locale);
         $translation->wti_file_id = $response;
         $translation->save();
       }

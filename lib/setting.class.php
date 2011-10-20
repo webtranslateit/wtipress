@@ -3,24 +3,36 @@
 class Setting {
   
   public $api_key;
-  public $project;
+  public $project_name;
   
   function __construct() {
     $data = get_option('wtipress_settings');
     $this->api_key = $data['api_key'];
+    $this->project_name = $data['project_name'];
   }
   
   function save() {
     $data['api_key'] = $this->api_key;
+    $data['project_name'] = $this->project_name;
     update_option('wtipress_settings', $data);
   }
   
-  function get_project() {
-    if (!isset($this->project)) {
-      $network = new Network($this->api_key);
-      $this->project = $network->project();
+  function refresh_settings() {
+    $network = new Network($this->api_key);
+    $info = $network->get_project_info();
+    $this->project_name = $info['project']['name'];
+    $this->save();
+    // persist source language
+    $l = new Language($info['project']['source_locale']['code'], $info['project']['source_locale']['name'], true);
+    $l->save();
+    // persist target languages
+    foreach($info['project']['target_locales'] as $target_locale) {
+      // except source language
+      if ($target_locale['code'] != $info['project']['source_locale']['code']) {
+        $l = new Language($target_locale['code'], $target_locale['name']);
+        $l->save();
+      }
     }
-    return $this->project;
   }
   
   function push_post($post_id) {
@@ -39,7 +51,7 @@ class Setting {
     	  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     	  element_type VARCHAR(32) NOT NULL DEFAULT 'post_post',
     	  element_id BIGINT NOT NULL,
-    	  language_code VARCHAR(7) NOT NULL,
+    	  language_id BIGINT NOT NULL,
     	  post_content LONGTEXT NOT NULL,
     	  post_title TEXT NOT NULL,
     	  post_excerpt TEXT NOT NULL,
@@ -51,10 +63,21 @@ class Setting {
     	  last_pulled_at DATETIME,
     	  wti_file_id BIGINT NOT NULL,
     	  wti_checksum VARCHAR(40),
-    	  UNIQUE KEY element_type_id_lang (element_type,element_id,language_code)
+    	  UNIQUE KEY element_type_id_lang (element_type,element_id,language_id)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
 
       require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
+
+      $table_name = $wpdb->prefix . "wtipress_languages";
+
+      $sql = "CREATE TABLE " . $table_name . " (
+    	  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    	  code VARCHAR(7) NOT NULL,
+    	  name VARCHAR(250) NOT NULL,
+    	  source BOOL NOT NULL DEFAULT FALSE
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;";
+
       dbDelta($sql);
       add_option("wtipress_db_version", WTIPRESS_DB_VERSION);
     }

@@ -27,14 +27,14 @@ Version: 0.0.1
        
 
 define('WTIPRESS_VERSION', '0.0.1');
-define('WTIPRESS_DB_VERSION', '0.0.1.11');
+define('WTIPRESS_DB_VERSION', '0.0.1.20');
 define('WTIPRESS_MIN_WORDPRESS_VERSION', '3.2.1'); // TODO: Test with earlier versions
 define('WTIPRESS_PLUGIN_PATH', dirname(__FILE__));
 define('WTIPRESS_PLUGIN_URL', rtrim(get_option('siteurl'),'/') . '/wp-content/' . basename(dirname(dirname(__FILE__))) . '/' . basename(dirname(__FILE__)) );
 
 require WTIPRESS_PLUGIN_PATH . '/lib/setting.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/language.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/network.class.php';
-require WTIPRESS_PLUGIN_PATH . '/lib/project.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/wtipress.class.php';

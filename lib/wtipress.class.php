@@ -42,7 +42,7 @@ class WtiPress {
   function process_forms() {
     if (isset($_POST['wti_api_key'])) {
       $this->settings->api_key = $_POST['wti_api_key'];
-      $this->settings->save();
+      $this->settings->refresh_settings();
     }
     elseif (isset($_POST['wti_post_id'])) {
       $this->settings->push_post($_POST['wti_post_id']);
