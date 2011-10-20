@@ -32,12 +32,12 @@ define('WTIPRESS_MIN_WORDPRESS_VERSION', '3.2.1'); // TODO: Test with earlier ve
 define('WTIPRESS_PLUGIN_PATH', dirname(__FILE__));
 define('WTIPRESS_PLUGIN_URL', rtrim(get_option('siteurl'),'/') . '/wp-content/' . basename(dirname(dirname(__FILE__))) . '/' . basename(dirname(__FILE__)) );
 
-require WTIPRESS_PLUGIN_PATH . '/lib/settings.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/setting.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/network.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/project.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
-require WTIPRESS_PLUGIN_PATH . '/wtipress.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/wtipress.class.php';
 
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {
@@ -45,7 +45,7 @@ if ( !function_exists( 'add_action' ) ) {
 	exit;
 }
 
-register_activation_hook(__FILE__, array('Settings', 'install'));
-add_action('plugins_loaded', array('Settings', 'update_db_ckeck'));
+register_activation_hook(__FILE__, array('Setting', 'install'));
+add_action('plugins_loaded', array('Setting', 'update_db_ckeck'));
 
 $wtipress = new WtiPress();

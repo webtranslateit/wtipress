@@ -7,7 +7,7 @@ class WtiPress {
   
   function __construct() {
     add_action('admin_menu', array($this, 'administration_menu'));
-    $this->settings = new Settings();
+    $this->settings = new Setting();
     $this->admin_warning();
     $this->version_warning();
     if(isset($this->settings->api_key)) {
