@@ -22,8 +22,20 @@ class Network {
     }
   }
   
-  function http_connection() {
+  function push_post($post_id) {
+    $post = get_post($post_id);
+    // create fake language file
     
+    // create entries for each language in wtipress table
+    
+    // push file to wti
+  }
+  
+  function pull_post($post_id) {
+    $post = get_post($post_id);
+    // pull post from wti for each language
+    
+    // update entries for each language in wtipress table
   }
   
 }
