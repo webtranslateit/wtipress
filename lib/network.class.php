@@ -40,7 +40,7 @@ class Network {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
       curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
       $response = curl_exec($ch);
-      
+      curl_close($ch);
       // update entries for each language in wtipress table
       foreach(Language::get_all() as $target_locale) {
         $translation = Translation::get_translation($post, $target_locale);
@@ -57,6 +57,7 @@ class Network {
       curl_setopt($ch, CURLOPT_POST, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
       $response = curl_exec($ch);
+      curl_close($ch);
       // create entries for each language in wtipress table
       foreach(Language::get_all() as $target_locale) {
         $translation = new Translation($post, $target_locale);
@@ -78,9 +79,9 @@ class Network {
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_HEADER, 1);
       curl_setopt($ch, CURLOPT_HEADER, true);
-      
       curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $target_locale->code);
       $response = curl_exec($ch);
+      curl_close($ch);
       list($header, $body) = explode("\r\n\r\n", $response, 2); 
       
       $parser = new sfYamlParser();
