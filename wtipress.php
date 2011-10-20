@@ -38,6 +38,12 @@ require WTIPRESS_PLUGIN_PATH . '/lib/translation.class.php';
 require WTIPRESS_PLUGIN_PATH . '/lib/library/sfYamlDumper.php';
 require WTIPRESS_PLUGIN_PATH . '/wtipress.class.php';
 
+// Make sure we don't expose any info if called directly
+if ( !function_exists( 'add_action' ) ) {
+	echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
+	exit;
+}
+
 register_activation_hook(__FILE__, array('Settings', 'install'));
 add_action('plugins_loaded', array('Settings', 'update_db_ckeck'));
 
