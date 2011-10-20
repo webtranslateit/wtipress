@@ -20,6 +20,7 @@ class WtiPress {
     // Set locale
     if(!defined('WP_ADMIN')){
       $this->set_locale();
+      add_filter('post_link', array($this, 'permalink_filter'),1,2);
     }
     add_filter('the_posts', array($this, 'the_posts'));
     
@@ -28,7 +29,7 @@ class WtiPress {
   function set_locale() {
     global $locale;
     $languages = Language::get_all_as_array();
-    switch ($this->settings->language_negociation_format) {
+    switch($this->settings->language_negociation_format) {
       // language negotiation by ?lang=xx parameter
       case 'param':
         if(isset($_GET['lang'])) {
@@ -73,6 +74,36 @@ class WtiPress {
     }
     $value[$locale] = 'index.php';
     return $value;
+  }
+  
+  function permalink_filter($p, $pid) {
+    global $wpdb, $locale;
+    $p = $this->convert_url($p, $locale);
+    return $p;
+  }
+  
+  function convert_url($url, $locale) {
+    $source_language = Language::get_source_language();
+    if ($locale == $source_language[0]->code) {
+      return $url;
+    }
+    else {
+      $abshome = preg_replace('@\?lang=' . $locale . '@i','', get_option('home'));
+      switch($this->settings->language_negociation_format) {
+        case 'directory':
+          if(0 === strpos($url, 'https://')){
+            $abshome = preg_replace('#^http://#', 'https://', $abshome);
+          }
+          if ($abshome == $url) $url .= '/';
+          if (0 !== strpos($url, $abshome . '/' . $locale . '/')) {
+            // only replace if it is there already
+            $url = str_replace($abshome, $abshome . '/' . $locale, $url);
+          }
+          break;
+          
+      }
+    return $url;
+  }
   }
   
   // Monkey patch to replace posts by their translations
