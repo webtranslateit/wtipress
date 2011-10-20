@@ -18,20 +18,61 @@ class WtiPress {
       add_action('init', array($this,'process_forms'));
     }
     // Set locale
-    $this->set_locale();
+    if(!defined('WP_ADMIN')){
+      $this->set_locale();
+    }
     add_filter('the_posts', array($this, 'the_posts'));
     
   }
   
   function set_locale() {
     global $locale;
-    if(isset($_GET['lang'])) {
-      $locale = $_GET['lang'];
+    $languages = Language::get_all_as_array();
+    switch ($this->settings->language_negociation_format) {
+      // language negotiation by ?lang=xx parameter
+      case 'param':
+        if(isset($_GET['lang'])) {
+          $locale = $_GET['lang'];
+        }
+        else {
+          $l = Language::get_source_language();
+          $locale = $l[0]->code;
+        }
+        break;
+      // language negotiation by /xx/... directory
+      case 'directory':
+        $s = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 's' : '';
+        $request = 'http' . $s . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $home = get_option('home');
+        if($s) {
+          $home = preg_replace('#^http://#', 'https://', $home);
+        }
+        $url_parts = parse_url($home);
+        $blog_path = !empty($url_parts['path']) ? $url_parts['path'] : '';
+        $path  = str_replace($home, '', $request);
+        $parts = explode('?', $path);
+        $path = $parts[0];
+        $exp = explode('/', trim($path, '/'));
+        if(in_array($exp[0], $languages)) {
+          $locale = $exp[0];
+          add_filter('option_rewrite_rules', array($this, 'rewrite_rules_filter'));          
+        }
+        else {
+          $l = Language::get_source_language();
+          $locale = $l[0]->code;
+        }
+        break;
     }
-    else {
-      $l = Language::get_source_language();
-      $locale = $l[0]->code;
+  }
+  
+  function rewrite_rules_filter($value) {
+    global $locale;
+    foreach((array)$value as $k => $v) {
+      $value[$locale . '/' . $k] = $v;
+      unset($value[$k]);
     }
+    $value[$locale] = 'index.php';
+    return $value;
   }
   
   // Monkey patch to replace posts by their translations
@@ -46,7 +87,7 @@ class WtiPress {
       $i = 0;
       foreach($posts as $post) {
         $translation = Translation::get_translation($post, $language);
-        if ($translation == NULL) {
+        if ($translation == NULL || (isset($translation) && $translation->finalized == 'false')) {
           if ($this->settings->action_missing_translation == 'display_source_language') {
             $translated_posts[$i] = $post;
             $i++;
@@ -76,6 +117,7 @@ class WtiPress {
     if (isset($_POST['wti_api_key'])) {
       $this->settings->api_key = $_POST['wti_api_key'];
       $this->settings->action_missing_translation = $_POST['wti_translation_missing'];
+      $this->settings->language_negociation_format = $_POST['language_negociation_format'];
       $this->settings->refresh_settings();
     }
     elseif (isset($_POST['wti_post_id'])) {

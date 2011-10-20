@@ -14,6 +14,7 @@ class Translation {
   public $last_pulled_at;
   public $wti_file_id;
   public $wti_checksum;
+  public $finalized;
   
   function __construct($post, $language, $post_content=NULL, $post_title=NULL, $post_excerpt=NULL, $post_name=NULL, $post_content_filtered=NULL, $created_at=NULL, $updated_at=NULL, $last_pushed_at=NULL, $last_pulled_at=NULL, $wti_file_id=NULL, $wti_checksum=NULL) {
     $this->post = $post;
@@ -29,6 +30,7 @@ class Translation {
     $this->last_pulled_at = $last_pulled_at;
     $this->wti_file_id = $wti_file_id;
     $this->wti_checksum = $wti_checksum;
+    $this->finalized = 'true';
   }
   
   static function get_translation($post, $language) {
@@ -38,11 +40,10 @@ class Translation {
     if ($result == NULL) {
       return NULL;
     }
-    elseif($result->post_content == "" || $result->post_title == "" || $result->post_excerpt == "" || $result->post_name == "" || $result->post_content_filtered == "") {
-      return NULL;
-    }
     else {
-      return new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
+      $translation = new Translation($post, $language, $result->post_content, $result->post_title, $result->post_excerpt, $result->post_name, $result->post_content_filtered, $result->created_at, $result->updated_at, $result->last_pushed_at, $result->last_pulled_at, $result->wti_file_id, $result->wti_checksum);
+      $translation->finalized;
+      return $translation;
     }
   }
   
@@ -50,6 +51,16 @@ class Translation {
     global $wpdb;
     $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_posts WHERE element_type=%s AND element_id=%d", array($post->post_type, $post->ID));
     return $wpdb->get_results($query);
+  }
+  
+  function finalized(){
+    if(($this->post_content == "" && !$post->post_content == "")
+    || ($this->post_title == "" && !$post->post_title == "")
+    || ($this->post_excerpt == "" && !$post->post_excerpt == "")
+    || ($this->post_name == "" && !$post->post_name == "")
+    || ($this->post_content_filtered == "" && !$post->post_content_filtered == "")) {
+      $this->finalized = 'false';
+    }
   }
   
   function save() {

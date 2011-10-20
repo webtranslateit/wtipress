@@ -33,6 +33,21 @@
             </select>
           </td>
         </tr>
+        <tr valign="top">
+          <th scope="row">
+            <label for="language_negociation_format">Language URL format</label>
+          </th>
+          <td>
+            <select id="language_negociation_format" name="language_negociation_format">
+              <option value="param"<?php if ($wtipress->settings->language_negociation_format == "param") echo "selected " ?>>
+                Using a ?lang=xx parameter
+              </option>
+              <option value="directory"<?php if ($wtipress->settings->language_negociation_format == "directory") echo "selected " ?>>
+                Using directories www.blog.com for English, www.blog.com/fr for French...
+              </option>
+            </select>
+          </td>
+        </tr>
       </tbody>
     </table>
     

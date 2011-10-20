@@ -6,6 +6,7 @@ class Setting {
   public $action_missing_translation;
   public $project_name;
   public $project_id;
+  public $language_negociation_format;
   
   function __construct() {
     $data = get_option('wtipress_settings');
@@ -13,6 +14,7 @@ class Setting {
     $this->project_name = $data['project_name'];
     $this->project_id = $data['project_id'];
     $this->action_missing_translation = $data['action_missing_translation'];
+    $this->language_negociation_format = $data['language_negociation_format'];
   }
   
   function save() {
@@ -20,6 +22,7 @@ class Setting {
     $data['project_name'] = $this->project_name;
     $data['project_id'] = $this->project_id;
     $data['action_missing_translation'] = $this->action_missing_translation;
+    $data['language_negociation_format'] = $this->language_negociation_format;
     update_option('wtipress_settings', $data);
   }
   
@@ -30,7 +33,7 @@ class Setting {
     $this->project_id = $info['project']['id'];
     $this->save();
     // persist source language
-    $l = new Language($info['project']['source_locale']['code'], $info['project']['source_locale']['name'], true);
+    $l = new Language(NULL, $info['project']['source_locale']['code'], $info['project']['source_locale']['name'], true);
     $l->save();
     // persist target languages
     foreach($info['project']['target_locales'] as $target_locale) {
