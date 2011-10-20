@@ -15,7 +15,7 @@ class WtiPress {
     }
     // Process post requests
     if(!empty($_POST)) {
-      add_action('init', array($this,'process_forms'));
+      add_action('init', array($this, 'process_forms'));
     }
     // Set locale
     if(!defined('WP_ADMIN')){
@@ -100,7 +100,15 @@ class WtiPress {
             $url = str_replace($abshome, $abshome . '/' . $locale, $url);
           }
           break;
-          
+        case 'param':
+          // $url = preg_replace('/[\?&]lang='.$locale.'/', '', $url);
+          if (strpos($url, '?')) {
+            $url .= "&lang=".$locale;
+          }
+          else {
+            $url .= "?lang=".$locale;
+          }
+          break;
       }
     return $url;
   }
