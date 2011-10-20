@@ -61,6 +61,7 @@ class Network {
       foreach(Language::get_all() as $target_locale) {
         $translation = new Translation($post, $target_locale);
         $translation->wti_file_id = $response;
+        $translation->last_pushed_at = date("Y-m-d H:i:s", time());
         $translation->save();
       }
     }
@@ -70,7 +71,23 @@ class Network {
   function pull_post($post_id) {
     $post = get_post($post_id);
     // pull post from wti for each language
-    
+    foreach(Language::get_all() as $target_locale) {
+      // get translation
+      $translation = Translation::get_Translation($post, $target_locale);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $target_locale->code);
+      $response = curl_exec($ch);
+      $parser = new sfYamlParser();
+      $content = $parser->parse($response);
+      $translation->post_content = $content['post_content'];
+      $translation->post_title = $content['post_title'];
+      $translation->post_excerpt = $content['post_excerpt'];
+      $translation->post_name = $content['post_name'];
+      $translation->post_content_filtered = $content['post_content_filtered'];
+      $translation->last_pulled_at = date("Y-m-d H:i:s", time());
+      $translation->save();
+    }
     // update entries for each language in wtipress table
   }
   

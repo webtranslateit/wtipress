@@ -40,6 +40,11 @@ class Setting {
     $network->push_post($post_id);
   }
   
+  function pull_post($post_id) {
+    $network = new Network($this->api_key);
+    $network->pull_post($post_id);
+  }
+  
   // Install DB
   static function install() {
     global $wpdb;
