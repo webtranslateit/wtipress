@@ -1,10 +1,5 @@
 <?php
   require_once WTIPRESS_PLUGIN_PATH . '/wtipress.php';
-
-  if(isset($wtipress->settings->api_key)) {
-    echo '<div class="updated fade"><p><strong>WTIpress is setup correctly</strong>';
-    echo ' and can sync with the project “<a href="https://webtranslateit.com/projects/'.$wtipress->settings->project_id.'">'.$wtipress->settings->project_name.'</a>” on WebTranslateIt.com. Good job!</p></div>';
-  }
 ?>
 
 <div class="wrap">
@@ -31,13 +26,17 @@
     </p>
   </form>
   
-  <?php if(isset($wtipress->settings->api_key)) { ?>
+  <?php
+  if(isset($wtipress->settings->api_key)) {
+    echo '<div class="updated fade"><p><strong>WTIpress is setup correctly</strong>';
+    echo ' and can sync with the project “<a href="https://webtranslateit.com/projects/'.$wtipress->settings->project_id.'">'.$wtipress->settings->project_name.'</a>” on WebTranslateIt.com. Good job!</p></div>';
+  ?>
   
   <h3>Languages at play</h3>
 
   <p>
     Tip: Add languages on your <?php echo '<a href="https://webtranslateit.com/projects/'.$wtipress->settings->project_id.'">project on WebTranslateIt.com</a> and refresh this form for them to appear.'; ?>
-    We detected the following:
+    We detected the following languages:
   </p>
   
   <table class="wp-list-table widefat fixed languages" cellspacing="0">
