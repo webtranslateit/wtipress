@@ -34,7 +34,7 @@ class Network {
     
     // create entries for each language in wtipress table
     foreach($this->project()->target_locales as $target_locale) {
-      $translation = new Translation($post, $locale['code']);
+      $translation = new Translation($post, $target_locale['code']);
       $translation->save();
     }
     
