@@ -20,13 +20,45 @@ class WtiPress {
     }
     // Set locale
     $this->set_locale();
+    add_filter('the_posts', array($this, 'the_posts'));
+    
   }
   
   function set_locale() {
+    global $locale;
     if(isset($_GET['lang'])) {
-      global $locale;
       $locale = $_GET['lang'];
-    }    
+    }
+    else {
+      $l = Language::get_source_language();
+      $locale = $l[0]->code;
+    }
+  }
+  
+  // Monkey patch to replace posts by their translations
+  function the_posts($posts) {
+    global $locale;
+    $source_locale = Language::get_source_language();
+    if ($source_locale[0]->code == $locale){
+      return $posts;
+    }
+    else { // get post translations
+      $language = Language::get_by_code($locale);
+      $i = 0;
+      foreach($posts as $post) {
+        $translation = Translation::get_translation($post, $language);
+        if ($translation != NULL) {
+          $post->post_content = $translation->post_content;
+          $post->post_title = $translation->post_title;
+          $post->post_excerpt = $translation->post_excerpt;
+          $post->post_name = $translation->post_name;
+          $post->post_content_filtered = $translation->post_content_filtered;
+        }
+        $translated_posts[$i] = $post;
+        $i++;
+      }
+      return $translated_posts;
+    }
   }
   
   function administration_menu() {

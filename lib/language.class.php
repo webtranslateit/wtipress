@@ -26,6 +26,13 @@ class Language {
     }
   }
   
+  static function get_source_language() {
+    global $wpdb;
+    $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_languages WHERE source=%d", array(true));
+    $result = $wpdb->get_results($query);
+    return $result;
+  }
+  
   static function get_all($source=false) {
     global $wpdb;
     $query = $wpdb->prepare("SELECT * FROM ". $wpdb->prefix . "wtipress_languages WHERE source=%d", array($source));
