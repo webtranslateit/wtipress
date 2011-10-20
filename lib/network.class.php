@@ -10,16 +10,13 @@ class Network {
   
   // call Project API
   function project() {
-    $snoopy = new Snoopy();
-    $snoopy->curl_path = "/usr/bin/curl";
-    if($snoopy->fetch("https://webtranslateit.com/api/projects/" . $this->api_key . ".json")) {
-      $p = json_decode($snoopy->results, true);
-      $project = new Project($p['project']['name'], $p['project']['source_locale']['name'], $p['project']['target_locales']);
-      return $project;
-    }
-    else {
-      print "Snoopy: error while fetching document: ".$snoopy->error."\n";
-    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . ".json");
+    $response = curl_exec($ch);
+    $p = json_decode($response, true);
+    $project = new Project($p['project']['name'], $p['project']['source_locale']['name'], $p['project']['target_locales']);
+    return $project;
   }
   
   function push_post($post_id) {
