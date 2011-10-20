@@ -27,7 +27,7 @@ class WtiPress {
       add_filter('home_url', array($this, 'home_url'), 1, 4) ;
       add_filter('feed_link', array($this, 'feed_link'), 1, 4);
       add_filter('author_link', array($this,'author_link'));
-    }    
+    }
   }
   
   function set_locale() {
@@ -102,7 +102,10 @@ class WtiPress {
   
   function home_url($url, $path, $orig_scheme, $blog_id) {
     global $locale;
-    return $this->convert_url($url, $locale);
+    if(did_action('template_redirect') && rtrim($url,'/') == rtrim(get_option('home'),'/')) {
+      $url = $this->convert_url($url, $locale);
+    }
+    return $url;
   }
   
   function feed_link($out) {
