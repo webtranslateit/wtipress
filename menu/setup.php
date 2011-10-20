@@ -18,6 +18,21 @@
             <span class="description">You will find your API key in your project settings.</span>
           </td>
         </tr>
+        <tr valign="top">
+          <th scope="row">
+            <label for="wti_translation_missing">When a translation is missing</label>
+          </th>
+          <td>
+            <select id="wti_translation_missing" name="wti_translation_missing">
+              <option value="display_source_language"<?php if ($wtipress->settings->action_missing_translation == "display_source_language") echo "selected " ?>>
+                Display post in source language
+              </option>
+              <option value="dont_display_post"<?php if ($wtipress->settings->action_missing_translation == "dont_display_post") echo "selected " ?>>
+                Don’t display post
+              </option>
+            </select>
+          </td>
+        </tr>
       </tbody>
     </table>
     

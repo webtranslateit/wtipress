@@ -46,15 +46,21 @@ class WtiPress {
       $i = 0;
       foreach($posts as $post) {
         $translation = Translation::get_translation($post, $language);
-        if ($translation != NULL) {
+        if ($translation == NULL) {
+          if ($this->settings->action_missing_translation == 'display_source_language') {
+            $translated_posts[$i] = $post;
+            $i++;
+          }
+        }
+        else {
           $post->post_content = $translation->post_content;
           $post->post_title = $translation->post_title;
           $post->post_excerpt = $translation->post_excerpt;
           $post->post_name = $translation->post_name;
           $post->post_content_filtered = $translation->post_content_filtered;
+          $translated_posts[$i] = $post;
+          $i++;
         }
-        $translated_posts[$i] = $post;
-        $i++;
       }
       return $translated_posts;
     }
@@ -69,6 +75,7 @@ class WtiPress {
   function process_forms() {
     if (isset($_POST['wti_api_key'])) {
       $this->settings->api_key = $_POST['wti_api_key'];
+      $this->settings->action_missing_translation = $_POST['wti_translation_missing'];
       $this->settings->refresh_settings();
     }
     elseif (isset($_POST['wti_post_id'])) {
