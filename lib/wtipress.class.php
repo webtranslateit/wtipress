@@ -37,6 +37,9 @@ class WtiPress {
     if (version_compare($wp_version, WTIPRESS_MIN_WORDPRESS_VERSION, '<')) {
       echo "<div class='updated fade'><p><strong>WTIpress ".WTIPRESS_VERSION." requires WordPress ".WTIPRESS_MIN_WORDPRESS_VERSION." or higher.</strong> Please <a href='http://codex.wordpress.org/Upgrading_WordPress'>upgrade WordPress</a> to a current version.</p></div>";
     }
+    if(version_compare(phpversion(), '5', '<')) {
+      echo "<div class='updated fade'><p><strong>WTIpress requires PHP 5 or higher.</strong> Please upgrade PHP to a current version.</p></div>";
+    }    
   }
   
   function process_forms() {
