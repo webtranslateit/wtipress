@@ -76,19 +76,25 @@ class Network {
       $translation = Translation::get_Translation($post, $target_locale);
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_HEADER, 1);
+      curl_setopt($ch, CURLOPT_HEADER, true);
+      
       curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation->wti_file_id . "/locales/" . $target_locale->code);
       $response = curl_exec($ch);
+      list($header, $body) = explode("\r\n\r\n", $response, 2); 
+      
       $parser = new sfYamlParser();
-      $content = $parser->parse($response);
+      $content = $parser->parse($body);
       $translation->post_content = $content['post_content'];
       $translation->post_title = $content['post_title'];
       $translation->post_excerpt = isset($content['post_excerpt']) ? $content['post_excerpt'] : "";
       $translation->post_name = $content['post_name'];
       $translation->post_content_filtered = isset($content['post_content_filtered']) ? $content['post_content_filtered'] : "";
       $translation->last_pulled_at = date("Y-m-d H:i:s", time());
+      $header = parse_http_response($header);
+      $translation->wti_checksum = $header[0]['x-checksum'];
       $translation->save();
     }
-    // update entries for each language in wtipress table
   }
   
 }
