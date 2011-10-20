@@ -4,7 +4,7 @@ function distance_of_time_in_words($from_time,$to_time = 0, $include_seconds = f
 	$ds = $distance_in_seconds = abs(($from_time - $to_time));
 	
 	switch ($distance_in_minutes) {
-		case $dm > 0 && $dm < 1:
+		case $dm > 0 && $dm < 2:
 		if($include_seconds == false) {
 			if ($dm == 0) {
 				return 'less than a minute';

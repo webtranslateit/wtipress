@@ -51,7 +51,7 @@ else {
       </td>
 	    <td class="date column-date">
 	      <?php
-	        if (empty($translations) || ($translations[0]->last_pulled_at == "0000-00-00 00:00:00")) { echo "Never"; }
+	        if (empty($translations) || ($translations[0]->last_pulled_at == "0000-00-00 00:00:00" || $translations[0]->last_pulled_at == NULL)) { echo "Never"; }
           else { echo distance_of_time_in_words(strtotime($translations[0]->last_pulled_at), time()) . " ago"; }
           echo '<form id="wti_push_post" method="post" action="'.$_SERVER['REQUEST_URI'].'">';
           echo '<input type="hidden" name="wti_post_id" value="'.$post->ID.'" />';
