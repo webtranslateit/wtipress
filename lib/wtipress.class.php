@@ -25,9 +25,9 @@ class WtiPress {
       add_filter('category_link', array($this, 'category_permalink_filter'), 1, 2);
       add_filter('tag_link', array($this, 'tax_permalink_filter'), 1, 2);
       add_filter('home_url', array($this, 'home_url'), 1, 4) ;
-    }
-    
-    
+      add_filter('feed_link', array($this, 'feed_link'), 1, 4);
+      add_filter('author_link', array($this,'author_link'));
+    }    
   }
   
   function set_locale() {
@@ -60,7 +60,8 @@ class WtiPress {
         $exp = explode('/', trim($path, '/'));
         if(in_array($exp[0], $languages)) {
           $locale = $exp[0];
-          add_filter('option_rewrite_rules', array($this, 'rewrite_rules_filter'));          
+          add_filter('option_rewrite_rules', array($this, 'rewrite_rules_filter'));
+          
         }
         else {
           $l = Language::get_source_language();
@@ -82,7 +83,11 @@ class WtiPress {
   
   function permalink_filter($p, $pid) {
     global $locale;
-    return $this->convert_url($p, $locale);
+    $p = $this->convert_url($p, $locale);
+    if(is_feed()) {
+      $p = str_replace("&lang=", "&#038;lang=", $p);
+    }
+    return $p;
   }
   
   function category_permalink_filter($p, $cat_id) {
@@ -100,6 +105,17 @@ class WtiPress {
     return $this->convert_url($url, $locale);
   }
   
+  function feed_link($out) {
+    global $locale;
+    return $this->convert_url($out, $locale);
+  }
+  
+  function author_link($url){
+    global $locale;
+    $url = $this->convert_url($url, $locale);
+    return preg_replace('#^http://(.+)//(.+)$#','http://$1/$2', $url);
+  }
+    
   function convert_url($url, $locale) {
     $source_language = Language::get_source_language();
     if ($locale == $source_language[0]->code) {
@@ -125,7 +141,7 @@ class WtiPress {
           }
           else {
             $url .= "?lang=".$locale;
-          }
+          }          
           break;
       }
     return $url;
@@ -154,7 +170,7 @@ class WtiPress {
           $post->post_content = $translation->post_content;
           $post->post_title = $translation->post_title;
           $post->post_excerpt = $translation->post_excerpt;
-          $post->post_name = $translation->post_name;
+          // $post->post_name = $translation->post_name; can’t make this translatable yet
           $post->post_content_filtered = $translation->post_content_filtered;
           $translated_posts[$i] = $post;
           $i++;
