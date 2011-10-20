@@ -17,6 +17,15 @@ class WtiPress {
     // Process post requests
     if(!empty($_POST)) {
       add_action('init', array($this,'process_forms'));
+    }
+    // Set locale
+    $this->set_locale();
+  }
+  
+  function set_locale() {
+    if(isset($_GET['lang'])) {
+      global $locale;
+      $locale = $_GET['lang'];
     }    
   }
   
