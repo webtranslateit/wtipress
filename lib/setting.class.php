@@ -33,7 +33,7 @@ class Setting {
     global $wpdb;
     
     if(get_option("wtipress_db_version") != WTIPRESS_DB_VERSION) {
-      $table_name = $wpdb->prefix . "wtipress";
+      $table_name = $wpdb->prefix . "wtipress_posts";
 
       $sql = "CREATE TABLE " . $table_name . " (
     	  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
