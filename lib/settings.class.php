@@ -28,7 +28,7 @@ class Settings {
     global $wpdb;
     
     if(get_option("wtipress_db_version") != WTIPRESS_DB_VERSION) {
-      $table_name = $wpdb->prefix . "wtipress2";
+      $table_name = $wpdb->prefix . "wtipress";
 
       $sql = "CREATE TABLE " . $table_name . " (
     	  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -52,6 +52,7 @@ class Settings {
   function update_db_ckeck() {
     if(get_site_option('wtipress_db_version') != WTIPRESS_DB_VERSION) {
       Settings::install();
+      update_option('wtipress_db_version', WTIPRESS_DB_VERSION);
     }
   }
 }
