@@ -30,6 +30,10 @@ define('WTIPRESS_VERSION', '0.0.1');
 define('WTIPRESS_PLUGIN_PATH', dirname(__FILE__));
 define('WTIPRESS_PLUGIN_URL', rtrim(get_option('siteurl'),'/') . '/wp-content/' . basename(dirname(dirname(__FILE__))) . '/' . basename(dirname(__FILE__)) );
 
+require WTIPRESS_PLUGIN_PATH . '/lib/settings.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/network.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/library/snoopy.class.php';
+require WTIPRESS_PLUGIN_PATH . '/lib/library/spyc.class.php';
 require WTIPRESS_PLUGIN_PATH . '/wtipress.class.php';
 
 $wtipress = new WtiPress();
