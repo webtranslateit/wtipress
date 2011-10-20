@@ -20,9 +20,13 @@ class WtiPress {
     // Set locale
     if(!defined('WP_ADMIN')){
       $this->set_locale();
-      add_filter('post_link', array($this, 'permalink_filter'),1,2);
+      add_filter('the_posts', array($this, 'the_posts'));
+      add_filter('post_link', array($this, 'permalink_filter'), 1, 2);
+      add_filter('category_link', array($this, 'category_permalink_filter'), 1, 2);
+      add_filter('tag_link', array($this, 'tax_permalink_filter'), 1, 2);
+      add_filter('home_url', array($this, 'home_url'), 1, 4) ;
     }
-    add_filter('the_posts', array($this, 'the_posts'));
+    
     
   }
   
@@ -33,7 +37,7 @@ class WtiPress {
       // language negotiation by ?lang=xx parameter
       case 'param':
         if(isset($_GET['lang'])) {
-          $locale = $_GET['lang'];
+          $locale = trim($_GET['lang'], '/');
         }
         else {
           $l = Language::get_source_language();
@@ -77,9 +81,23 @@ class WtiPress {
   }
   
   function permalink_filter($p, $pid) {
-    global $wpdb, $locale;
-    $p = $this->convert_url($p, $locale);
-    return $p;
+    global $locale;
+    return $this->convert_url($p, $locale);
+  }
+  
+  function category_permalink_filter($p, $cat_id) {
+    global $locale;
+    return $this->convert_url($p, $locale);
+  }
+  
+  function tax_permalink_filter($p, $tag) {
+    global $locale;
+    return $this->convert_url($p, $locale);
+  }
+  
+  function home_url($url, $path, $orig_scheme, $blog_id) {
+    global $locale;
+    return $this->convert_url($url, $locale);
   }
   
   function convert_url($url, $locale) {
