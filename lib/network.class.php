@@ -24,11 +24,29 @@ class Network {
   
   function push_post($post_id) {
     $post = get_post($post_id);
-    // create fake language file
+    // create pseudo language file
+    $array = array('en' => array('post_title' => $post->post_title, 'post_excerpt' => $post->post_excerpt, 'post_content' => $post->post_content, 'post_name' => $post->post_name, 'post_content_filtered' => $post->post_content_filtered));
+    $dumper = new sfYamlDumper();
+    $yaml = $dumper->dump($array);
+    
+    $myFile = wp_upload_dir() . "test.yml";
+    $fh = fopen($myFile, 'w') or die("can't open file");
+    fwrite($fh, $yaml);
+    fclose($fh);
     
     // create entries for each language in wtipress table
+    foreach($this->project()->target_locales as $target_locale) {
+      $translation = new Translation($post, $locale['code']);
+      $translation->save();
+    }
     
-    // push file to wti
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files");
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".wp_upload_dir() . "test.yml", 'name' => $post->post_date.'-'.$post->post_name.'.yml')); 
+    $response = curl_exec($ch);
+    
+    // TODO: Delete file
   }
   
   function pull_post($post_id) {
