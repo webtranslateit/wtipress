@@ -71,6 +71,12 @@ class Language {
     }
   }
   
+  function delete() {
+    global $wpdb;
+    $wpdb->query("DELETE FROM ".$wpdb->prefix."wtipress_languages WHERE id = '".$this->id."'");
+    $wpdb->get_results;
+  }
+  
 }
 
 ?>

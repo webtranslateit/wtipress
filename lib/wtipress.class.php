@@ -204,6 +204,12 @@ class WtiPress {
       $this->settings->language_negociation_format = $_POST['language_negociation_format'];
       $this->settings->refresh_settings();
     }
+    elseif (isset($_POST['new_language'])) {
+      $this->settings->add_language($_POST['new_language']);
+    }
+    elseif (isset($_POST['remove_language_code'])) {
+      $this->settings->remove_language($_POST['remove_language_code']);
+    }
     elseif (isset($_POST['wti_post_id'])) {
       if ($_POST['action'] == 'push') {
         $this->settings->push_post($_POST['wti_post_id']);

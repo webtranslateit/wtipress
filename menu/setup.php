@@ -74,6 +74,7 @@
   	<tr>
   		<th scope='col' id='name' class='manage-column column-name'><span>Language Name</span></th>
   		<th scope='col' id='type' class='manage-column column-type'>Type</th>
+  		<th scope='col' id='actions' class='manage-column column-type'>Actions</th>
     </tr>
     </thead>
   	<tbody id="the-list">
@@ -81,14 +82,30 @@
   	  <tr id='post-8' class='alternate author-self status-publish format-default iedit' valign="top">
   	    <td class="language-name page-title column-title"><strong><?php echo $source_language[0]->name; ?></a></strong></td>
         <td class="date column-type">Source</td>
+        <td class="date column-actions"></td>
       </tr>
       <?php foreach(Language::get_all() as $language) { ?>
         <tr id='post-8' class='alternate author-self status-publish format-default iedit' valign="top">
     	    <td class="language-name page-title column-title"><strong><?php echo $language->name; ?></a></strong></td>
           <td class="date column-type">Target</td>
+          <td class="date column-actions">
+            <form id="wti_api_key" method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
+              <input type="hidden" name="remove_language_code" value="<?php echo $language->code; ?>" />
+              <input type="submit" value="Remove Language" />
+            </form>
+          </td>
         </tr>
     	<?php }  ?>
     </tbody>
   </table>
+  <form id="wti_api_key" method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
+    <div>
+      <label for="new_language">Add a new language</label>
+      <input type="text" name="new_language" id="new_language" />
+    </div>
+    <div>
+      <input type="submit" />
+    </div>
+  </form>
   <?php } ?>
 </div>
