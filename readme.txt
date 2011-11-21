@@ -21,7 +21,7 @@ WTIpress makes a Wordpress site multilingual, and lets you translate posts and p
 
 == Changelog ==
 
-* Edge
+* Version 0.0.2
   * New: Ability to add and delete languages from WTIpress.
 * Version 0.0.1
 	* Initial version
