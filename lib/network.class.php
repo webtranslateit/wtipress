@@ -98,5 +98,23 @@ class Network {
     }
   }
   
+  function add_language($language_code) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/locales");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, array("id" => $language_code));
+    $response = curl_exec($ch);
+    curl_close($ch);
+  }
+  
+  function remove_language($language_code) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/locales/" . $language_code);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    $response = curl_exec($ch);
+    curl_close($ch);
+  }
 }
 ?>

@@ -55,6 +55,22 @@ class Setting {
     $network->pull_post($post_id);
   }
   
+  function add_language($language_code) {
+    $network = new Network($this->api_key);
+    $network->add_language($language_code);
+    $this->refresh_settings();
+  }
+  
+  function remove_language($language_code) {
+    $language = Language::get_by_code($language_code);
+    if ($language != NULL) {
+      $network = new Network($this->api_key);
+      $language->delete();
+      $network->remove_language($language_code);
+      $this->refresh_settings();
+    }
+  }
+  
   // Install DB
   static function install() {
     global $wpdb;
