@@ -26,7 +26,7 @@ Version: 0.0.1
 */
        
 
-define('WTIPRESS_VERSION', '0.0.1');
+define('WTIPRESS_VERSION', '0.0.2');
 define('WTIPRESS_DB_VERSION', '0.0.1.22');
 define('WTIPRESS_MIN_WORDPRESS_VERSION', '2.9');
 define('WTIPRESS_PLUGIN_PATH', dirname(__FILE__));
