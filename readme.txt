@@ -3,7 +3,7 @@ Contributors: Édouard Brière
 Tags: i18n, localization, multilingual, bilingual, translation, language, international, l10n
 Requires at least: 2.9
 Tested up to: 3.2.1
-Stable tag: 0.0.1
+Stable tag: 0.0.2
 
 Makes a Wordpress site multilingual, and lets you translate posts and pages using the WebTranslateIt.com service.
 
