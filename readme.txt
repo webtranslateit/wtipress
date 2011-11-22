@@ -21,6 +21,8 @@ WTIpress makes a Wordpress site multilingual, and lets you translate posts and p
 
 == Changelog ==
 
+* Version 0.0.3
+  * Fix: Limit file name length, see Github issue #28.
 * Version 0.0.2
   * New: Ability to add and delete languages from WTIpress.
 * Version 0.0.1
