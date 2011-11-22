@@ -38,7 +38,7 @@ class Network {
       curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files/" . $translation[0]->wti_file_id . "/locales/" . $source_locale[0]->code);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-      curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
+      curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.substr(urldecode($post->post_name), 0, 180).'.wordpress')); 
       $response = curl_exec($ch);
       curl_close($ch);
       // update entries for each language in wtipress table
@@ -55,7 +55,7 @@ class Network {
       curl_setopt($ch, CURLOPT_URL, "https://webtranslateit.com/api/projects/" . $this->api_key . "/files");
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.$post->post_name.'.wordpress')); 
+      curl_setopt($ch, CURLOPT_POSTFIELDS, array("file" => "@".$file_path, 'name' => $post->post_date.'-'.substr(urldecode($post->post_name), 0, 180).'.wordpress')); 
       $response = curl_exec($ch);
       curl_close($ch);
       // create entries for each language in wtipress table

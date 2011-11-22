@@ -3,7 +3,7 @@ Contributors: Édouard Brière
 Tags: i18n, localization, multilingual, bilingual, translation, language, international, l10n
 Requires at least: 2.9
 Tested up to: 3.2.1
-Stable tag: 0.0.2
+Stable tag: 0.0.3
 
 Makes a Wordpress site multilingual, and lets you translate posts and pages using the WebTranslateIt.com service.
 
@@ -21,6 +21,8 @@ WTIpress makes a Wordpress site multilingual, and lets you translate posts and p
 
 == Changelog ==
 
+* Version 0.0.3
+  * Fix: Limit file name length, see Github issue #28.
 * Version 0.0.2
   * New: Ability to add and delete languages from WTIpress.
 * Version 0.0.1
